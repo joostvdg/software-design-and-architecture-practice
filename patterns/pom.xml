@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.isaqb.practice</groupId>
+  <artifactId>patterns</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>ISAQB CPSA-F Pattern Practice</name>
+  <description>
+    Hands-on Java implementations of the architectural patterns from isaqb-study-prep.md.
+    Each module is an independently buildable/releasable pattern; see PATTERN-TEMPLATE.md
+    for the authoring spec and RELEASE.md for the shared build/scan/release workflow.
+  </description>
+
+  <modules>
+    <module>01-layers</module>
+    <module>02-pipes-and-filters</module>
+    <module>03-microservices</module>
+    <module>04-broker</module>
+    <module>05-soa</module>
+    <module>06-ports-and-adapters</module>
+    <module>07-cqrs</module>
+    <module>08-event-sourcing</module>
+    <module>09-plugin</module>
+    <module>10-mvc-family</module>
+    <module>11-dependency-injection</module>
+    <module>12-rpc</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>25</maven.compiler.release>
+
+    <junit.version>6.1.2</junit.version>
+
+    <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
+    <maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+    <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.9.3</cyclonedx-maven-plugin.version>
+  </properties>
+
+  <!--
+    Every module inherits the same JUnit dependency management so pattern folders
+    never need to pin a version themselves. No application-level frameworks are
+    dependency-managed here on purpose - see the root CLAUDE.md / PATTERN-TEMPLATE.md
+    constraint: plain JDK 25 for main code, JUnit only for tests.
+  -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <!--
+    Every module gets JUnit 5 (Jupiter) on the test classpath by default so pattern
+    modules only need to declare src/test/java classes, not repeat this dependency.
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven-jar-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>jacoco-prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>jacoco-report</id>
+              <phase>test</phase>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <!-- Generates the CycloneDX SBOM required as release evidence, see RELEASE.md -->
+          <groupId>org.cyclonedx</groupId>
+          <artifactId>cyclonedx-maven-plugin</artifactId>
+          <version>${cyclonedx-maven-plugin.version}</version>
+          <configuration>
+            <projectType>application</projectType>
+            <outputFormat>json</outputFormat>
+            <outputName>sbom.cdx</outputName>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <!-- Applied to every module: tests + coverage run on every `mvn verify`. -->
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.isaqb.practice</groupId>
+    <artifactId>patterns</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>microservices</artifactId>
+  <name>ISAQB Practice - Microservices</name>
+
+  <!--
+    No `mainClass` manifest here on purpose: this module ends up with two independently
+    runnable entry points (orchestrator.OrchestratorMain and registry.RegistryMain), not
+    one. Picking either as "the" jar main class would misrepresent the pattern - see
+    milestones/06-build-and-release.md for how each service is actually started.
+  -->
+  <build>
+    <finalName>${project.artifactId}-${project.version}</finalName>
+  </build>
+</project>
