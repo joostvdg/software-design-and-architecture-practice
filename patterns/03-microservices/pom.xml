@@ -14,6 +14,14 @@
   <artifactId>microservices</artifactId>
   <name>ISAQB Practice - Microservices</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.7.0</version>
+    </dependency>
+  </dependencies>
+
   <!--
     No `mainClass` manifest here on purpose: this module ends up with two independently
     runnable entry points (orchestrator.OrchestratorMain and registry.RegistryMain), not
